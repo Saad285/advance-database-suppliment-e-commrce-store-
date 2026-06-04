@@ -44,6 +44,7 @@ Professor, Department of Computer Science
    * 5.4 ACID Compliance & Concurrency Stored Transactions
    * 5.5 Indexing Strategy & Query Optimization
    * 5.6 Row Level Security (RLS) & Granular Privileges
+   * 5.7 Backup & Recovery
 6. **Implementation Details**
    * 6.1 Programming Languages & Technical Tools
    * 6.2 Modules Description
@@ -309,6 +310,26 @@ RLS policies act as the primary security layer at the database level:
 * **Zero-Trust Security:** Anonymous users can only view active products and categories.
 * **Isolation:** Registered customers can only view and edit their own profiles, addresses, and orders.
 * **Admin Privilege Rules:** Only authenticated administrators are allowed to create products, delete categories, or edit system settings.
+
+### 5.7 Backup & Recovery Architecture
+To protect user credentials and transactional order history against accidental data deletion or hardware failure, the system implements a multi-tier Backup and Recovery strategy:
+
+1. **Continuous Logging & Point-in-Time Recovery (PITR):**
+   * The database engine continuously logs transaction records into **Write-Ahead Logging (WAL)** files.
+   * If a system crash occurs or an unauthorized deletion is executed, WAL files enable state recovery to a precise millisecond snapshot of the database prior to the disaster.
+2. **Automated Physical & Logical Backups:**
+   * Supabase executes automated physical and logical backups on a daily schedule.
+   * Logical dumps are generated using `pg_dump` tools and stored securely on cloud object storage nodes.
+3. **Disaster Recovery Scripts (Manual Backup):**
+   * The complete database DDL, triggers, and configurations are packaged into `supabase_schema.sql` at the root of the project to allow developers to rebuild the database schema from scratch on any new instance.
+   * **Backup Export Command:**
+     ```sql
+     pg_dump -h db.tmogcconkkhkjqwjxphl.supabase.co -U postgres -F c -b -v -f ironroots_backup.dump
+     ```
+   * **Recovery Import Command:**
+     ```sql
+     pg_restore -h db.tmogcconkkhkjqwjxphl.supabase.co -U postgres -d postgres -v ironroots_backup.dump
+     ```
 
 ---
 
