@@ -10,9 +10,9 @@
 **Academic Institution:** Department of Computer Science & Software Engineering  
 
 **Submitted By:**  
-1. **[Student 1 Name]** (Roll No: [Roll 1]) — UI/UX Design, Front-end Architecture, Documentation  
-2. **[Student 2 Name]** (Roll No: [Roll 2]) — Procedural Logic, Database Design, SQL Optimization  
-3. **[Student 3 Name]** (Roll No: [Roll 3]) — Software Testing, Security Audit, Quality Assurance  
+1. **Muhammad Saad Zia** (Roll No: 232394) — UI/UX Design, Front-end Architecture, Documentation  
+2. **Ahmad Rao** (Roll No: 232385) — Procedural Logic, Database Design, SQL Optimization  
+3. **Maheen Fatima** (Roll No: 232528) — Software Testing, Security Audit, Quality Assurance  
 
 **Submitted To:**  
 **[Instructor Name]**  
@@ -112,9 +112,9 @@ Traditional e-commerce architectures often suffer from critical data integrity i
 
 | Member Name | Roll No. | Responsibilities |
 | :--- | :--- | :--- |
-| **Student 1** | *[Roll 1]* | Developed the frontend UI/UX in a warm minimalist cream-ivory layout, configured Framer Motion animations, handled form validation state, and prepared documentation. |
-| **Student 2** | *[Roll 2]* | Engineered the database schema, wrote complex SQL queries, developed the PL/pgSQL stored procedures, and configured triggers. |
-| **Student 3** | *[Roll 3]* | Conducted RLS security tests, performed performance profiling on indices, wrote system test cases, and compiled final reports. |
+| **Muhammad Saad Zia** | 232394 | Developed the frontend UI/UX in a warm minimalist cream-ivory layout, configured Framer Motion animations, handled form validation state, and prepared documentation. |
+| **Ahmad Rao** | 232385 | Engineered the database schema, wrote complex SQL queries, developed the PL/pgSQL stored procedures, and configured triggers. |
+| **Maheen Fatima** | 232528 | Conducted RLS security tests, performed performance profiling on indices, wrote system test cases, and compiled final reports. |
 
 ---
 
