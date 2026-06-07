@@ -1,18 +1,24 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { Product } from '@/types'
-import { useCartStore } from '@/lib/store/cart'
-import { toast } from 'sonner'
-import { motion } from 'framer-motion'
+import Link from "next/link";
+import Image from "next/image";
+import { Product } from "@/types";
+import { useCartStore } from "@/lib/store/cart";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
 
-export default function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
-  const addItem = useCartStore((state) => state.addItem)
+export default function ProductCard({
+  product,
+  index = 0,
+}: {
+  product: Product;
+  index?: number;
+}) {
+  const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     addItem({
       product_id: product.id,
       product_name: product.name,
@@ -20,19 +26,23 @@ export default function ProductCard({ product, index = 0 }: { product: Product; 
       unit_price: product.price,
       quantity: 1,
       stock_qty: product.stock_qty,
-    })
-    toast.success(`Added to cart`)
-  }
+    });
+    toast.success(`Added to cart`);
+  };
 
-  const isOutOfStock = product.stock_qty <= 0
-  const categoryName = (product as any).categories?.name
+  const isOutOfStock = product.stock_qty <= 0;
+  const categoryName = (product as any).categories?.name;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.08,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
     >
       <Link href={`/products/${product.slug}`} className="group block">
         <div className="relative aspect-[3/4] bg-card border border-border overflow-hidden rounded-sm">
@@ -45,7 +55,9 @@ export default function ProductCard({ product, index = 0 }: { product: Product; 
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-card">
-              <span className="text-2xl font-light text-muted-foreground/50 tracking-widest">IR</span>
+              <span className="text-2xl font-light text-muted-foreground/50 tracking-widest">
+                IR
+              </span>
             </div>
           )}
 
@@ -81,16 +93,23 @@ export default function ProductCard({ product, index = 0 }: { product: Product; 
             {product.name}
           </h3>
           {categoryName && (
-            <p className="text-[11px] text-muted-foreground/80 uppercase tracking-wider mt-1">{categoryName}</p>
+            <p className="text-[11px] text-muted-foreground/80 uppercase tracking-wider mt-1">
+              {categoryName}
+            </p>
           )}
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-sm font-medium text-foreground">Rs. {product.price.toLocaleString()}</span>
-            {product.compare_at_price && product.compare_at_price > product.price && (
-              <span className="text-xs text-muted-foreground/60 line-through">Rs. {product.compare_at_price.toLocaleString()}</span>
-            )}
+            <span className="text-sm font-medium text-foreground">
+              Rs. {product.price.toLocaleString()}
+            </span>
+            {product.compare_at_price &&
+              product.compare_at_price > product.price && (
+                <span className="text-xs text-muted-foreground/60 line-through">
+                  Rs. {product.compare_at_price.toLocaleString()}
+                </span>
+              )}
           </div>
         </div>
       </Link>
     </motion.div>
-  )
+  );
 }

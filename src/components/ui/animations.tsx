@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { ReactNode } from 'react'
+import { motion } from "framer-motion";
+import { ReactNode } from "react";
 
 export function FadeIn({
   children,
   delay = 0,
   duration = 0.6,
-  className = '',
+  className = "",
 }: {
-  children: ReactNode
-  delay?: number
-  duration?: number
-  className?: string
+  children: ReactNode;
+  delay?: number;
+  duration?: number;
+  className?: string;
 }) {
   return (
     <motion.div
@@ -23,45 +23,45 @@ export function FadeIn({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 export function FadeInOnScroll({
   children,
   delay = 0,
-  className = '',
+  className = "",
 }: {
-  children: ReactNode
-  delay?: number
-  className?: string
+  children: ReactNode;
+  delay?: number;
+  className?: string;
 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 export function StaggerContainer({
   children,
-  className = '',
+  className = "",
   staggerDelay = 0.08,
 }: {
-  children: ReactNode
-  className?: string
-  staggerDelay?: number
+  children: ReactNode;
+  className?: string;
+  staggerDelay?: number;
 }) {
   return (
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-40px' }}
+      viewport={{ once: true, margin: "-40px" }}
       variants={{
         visible: {
           transition: {
@@ -73,15 +73,15 @@ export function StaggerContainer({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 export function StaggerItem({
   children,
-  className = '',
+  className = "",
 }: {
-  children: ReactNode
-  className?: string
+  children: ReactNode;
+  className?: string;
 }) {
   return (
     <motion.div
@@ -97,29 +97,29 @@ export function StaggerItem({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 export function SlideIn({
   children,
-  direction = 'left',
+  direction = "left",
   delay = 0,
-  className = '',
+  className = "",
 }: {
-  children: ReactNode
-  direction?: 'left' | 'right'
-  delay?: number
-  className?: string
+  children: ReactNode;
+  direction?: "left" | "right";
+  delay?: number;
+  className?: string;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: direction === 'left' ? -30 : 30 }}
+      initial={{ opacity: 0, x: direction === "left" ? -30 : 30 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
     >
       {children}
     </motion.div>
-  )
+  );
 }

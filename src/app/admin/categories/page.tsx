@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase/server'
+import { createServerSupabase } from "@/lib/supabase/server";
 import {
   Table,
   TableBody,
@@ -6,17 +6,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function AdminCategoriesPage() {
-  const supabase = await createServerSupabase()
+  const supabase = await createServerSupabase();
 
   const { data: categories } = await supabase
-    .from('categories')
-    .select('*, products(count)')
-    .order('name')
+    .from("categories")
+    .select("*, products(count)")
+    .order("name");
 
   return (
     <div>
@@ -35,8 +35,13 @@ export default async function AdminCategoriesPage() {
           </TableHeader>
           <TableBody>
             {categories?.map((cat) => (
-              <TableRow key={cat.id} className="border-zinc-800 hover:bg-zinc-800/50">
-                <TableCell className="font-medium text-zinc-200">{cat.name}</TableCell>
+              <TableRow
+                key={cat.id}
+                className="border-zinc-800 hover:bg-zinc-800/50"
+              >
+                <TableCell className="font-medium text-zinc-200">
+                  {cat.name}
+                </TableCell>
                 <TableCell className="text-zinc-400">{cat.slug}</TableCell>
                 <TableCell className="text-zinc-300">
                   {cat.products?.[0]?.count || 0}
@@ -47,5 +52,5 @@ export default async function AdminCategoriesPage() {
         </Table>
       </div>
     </div>
-  )
+  );
 }

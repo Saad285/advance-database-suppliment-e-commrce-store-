@@ -1,20 +1,20 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useCartStore } from '@/lib/store/cart'
-import { Product } from '@/types'
-import { toast } from 'sonner'
-import { Minus, Plus } from 'lucide-react'
+import { useState } from "react";
+import { useCartStore } from "@/lib/store/cart";
+import { Product } from "@/types";
+import { toast } from "sonner";
+import { Minus, Plus } from "lucide-react";
 
 export default function AddToCartButton({
   product,
-  isOutOfStock
+  isOutOfStock,
 }: {
-  product: Product
-  isOutOfStock: boolean
+  product: Product;
+  isOutOfStock: boolean;
 }) {
-  const [qty, setQty] = useState(1)
-  const addItem = useCartStore((state) => state.addItem)
+  const [qty, setQty] = useState(1);
+  const addItem = useCartStore((state) => state.addItem);
 
   const handleAdd = () => {
     addItem({
@@ -24,13 +24,13 @@ export default function AddToCartButton({
       unit_price: product.price,
       quantity: qty,
       stock_qty: product.stock_qty,
-    })
-    toast.success(`Added to cart`)
-    setQty(1)
-  }
+    });
+    toast.success(`Added to cart`);
+    setQty(1);
+  };
 
-  const increase = () => setQty(q => Math.min(q + 1, product.stock_qty))
-  const decrease = () => setQty(q => Math.max(q - 1, 1))
+  const increase = () => setQty((q) => Math.min(q + 1, product.stock_qty));
+  const decrease = () => setQty((q) => Math.max(q - 1, 1));
 
   if (isOutOfStock) {
     return (
@@ -40,7 +40,7 @@ export default function AddToCartButton({
       >
         Out of Stock
       </button>
-    )
+    );
   }
 
   return (
@@ -53,7 +53,9 @@ export default function AddToCartButton({
         >
           <Minus className="w-3.5 h-3.5" />
         </button>
-        <span className="w-10 text-center text-sm font-medium text-white">{qty}</span>
+        <span className="w-10 text-center text-sm font-medium text-white">
+          {qty}
+        </span>
         <button
           onClick={increase}
           className="px-3 h-full flex items-center justify-center text-zinc-400 hover:text-white transition-colors duration-200 disabled:opacity-30"
@@ -70,5 +72,5 @@ export default function AddToCartButton({
         Add to Cart
       </button>
     </div>
-  )
+  );
 }

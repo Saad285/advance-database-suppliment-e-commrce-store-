@@ -1,20 +1,33 @@
-import Link from 'next/link'
+import Link from "next/link";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 const shopLinks = [
-  { href: '/products', label: 'All Products' },
-  { href: '/products?category=performance', label: 'Performance' },
-  { href: '/products?category=vitamins', label: 'Vitamins' },
-  { href: '/products?category=beauty', label: 'Beauty' },
-]
+  { href: "/products", label: "All Products" },
+  { href: "/products?category=performance", label: "Performance" },
+  { href: "/products?category=vitamins", label: "Vitamins" },
+  { href: "/products?category=beauty", label: "Beauty" },
+];
 
-const supportLinks = [
-  { href: '/contact', label: 'Contact Us' },
-  { href: '/shipping', label: 'Shipping & Returns' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/privacy', label: 'Privacy Policy' },
-]
+export default async function Footer() {
+  const supabase = await createServerSupabase();
+  const { data: pages, error } = await supabase
+    .from("pages")
+    .select("slug, title")
+    .order("created_at");
 
-export default function Footer() {
+  let supportLinks = [];
+  if (!error && pages) {
+    supportLinks = pages.map((p) => ({ href: `/${p.slug}`, label: p.title }));
+  } else {
+    // Fallback if table not created yet
+    supportLinks = [
+      { href: "/contact", label: "Contact Us" },
+      { href: "/shipping", label: "Shipping & Returns" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/privacy", label: "Privacy Policy" },
+    ];
+  }
+
   return (
     <footer className="bg-card border-t border-border pt-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -24,7 +37,8 @@ export default function Footer() {
               IRONROOTS
             </h2>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs leading-relaxed">
-              Premium supplements rooted in science, crafted for those who demand more from their bodies.
+              Premium supplements rooted in science, crafted for those who
+              demand more from their bodies.
             </p>
           </div>
 
@@ -94,5 +108,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

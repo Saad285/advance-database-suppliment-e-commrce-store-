@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase/server'
+import { createServerSupabase } from "@/lib/supabase/server";
 import {
   Table,
   TableBody,
@@ -6,62 +6,108 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from '@/components/ui/badge'
-import Image from 'next/image'
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
+import AddProductButton from "@/components/admin/AddProductButton";
+import EditProductButton from "@/components/admin/EditProductButton";
+import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function AdminProductsPage() {
-  const supabase = await createServerSupabase()
+  const supabase = await createServerSupabase();
 
-  const { data: products } = await supabase
-    .from('products')
-    .select('*, categories(name)')
-    .order('created_at', { ascending: false })
+  // Fetch products and categories for CRUD creation modal dropdown
+  const [{ data: products }, { data: categories }] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*, categories(name)")
+      .order("created_at", { ascending: false }),
+    supabase.from("categories").select("*").order("name"),
+  ]);
 
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-white">Products</h1>
+        <h1 className="text-3xl font-light text-foreground">Products</h1>
+        <AddProductButton categories={categories || []} />
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+      <div className="bg-card border border-border rounded-sm overflow-hidden">
         <Table>
-          <TableHeader className="bg-zinc-950">
-            <TableRow className="border-zinc-800 hover:bg-transparent">
-              <TableHead className="text-zinc-400">Product</TableHead>
-              <TableHead className="text-zinc-400">Category</TableHead>
-              <TableHead className="text-zinc-400">Price</TableHead>
-              <TableHead className="text-zinc-400">Stock</TableHead>
-              <TableHead className="text-zinc-400">Status</TableHead>
+          <TableHeader className="bg-muted/30">
+            <TableRow className="border-border hover:bg-transparent">
+              <TableHead className="text-muted-foreground">Product</TableHead>
+              <TableHead className="text-muted-foreground">Category</TableHead>
+              <TableHead className="text-muted-foreground">Price</TableHead>
+              <TableHead className="text-muted-foreground">Stock</TableHead>
+              <TableHead className="text-muted-foreground">Status</TableHead>
+              <TableHead className="text-muted-foreground text-right">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {products?.map((product) => (
-              <TableRow key={product.id} className="border-zinc-800 hover:bg-zinc-800/50">
+              <TableRow
+                key={product.id}
+                className="border-border hover:bg-secondary/40"
+              >
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <div className="relative w-10 h-10 bg-zinc-800 rounded border border-zinc-700 overflow-hidden">
+                    <div className="relative w-10 h-10 bg-muted rounded border border-border overflow-hidden">
                       {product.images?.[0] ? (
-                        <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+                        <Image
+                          src={product.images[0]}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
                       ) : (
-                        <span className="flex w-full h-full items-center justify-center text-xs text-zinc-500 font-bold">IR</span>
+                        <span className="flex w-full h-full items-center justify-center text-xs text-muted-foreground/60 font-bold">
+                          IR
+                        </span>
                       )}
                     </div>
                     <div>
-                      <div className="font-medium text-zinc-200">{product.name}</div>
-                      <div className="text-xs text-zinc-500">{product.slug}</div>
+                      <div className="font-medium text-foreground">
+                        {product.name}
+                      </div>
+                      <div className="text-xs text-muted-foreground/75">
+                        {product.slug}
+                      </div>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-zinc-300">{product.categories?.name}</TableCell>
-                <TableCell className="text-zinc-300">Rs. {product.price}</TableCell>
-                <TableCell className="text-zinc-300">{product.stock_qty}</TableCell>
+                <TableCell className="text-foreground/90">
+                  {product.categories?.name}
+                </TableCell>
+                <TableCell className="text-foreground/90">
+                  Rs. {product.price}
+                </TableCell>
+                <TableCell className="text-foreground/90">
+                  {product.stock_qty}
+                </TableCell>
                 <TableCell>
-                  <Badge variant={product.is_active ? "default" : "destructive"} className="border-none">
-                    {product.is_active ? 'Active' : 'Draft'}
+                  <Badge
+                    variant={product.is_active ? "default" : "destructive"}
+                    className="border-none"
+                  >
+                    {product.is_active ? "Active" : "Draft"}
                   </Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end items-center gap-2">
+                    <EditProductButton
+                      product={product}
+                      categories={categories || []}
+                    />
+                    <DeleteProductButton
+                      productId={product.id}
+                      productName={product.name}
+                    />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -69,5 +115,5 @@ export default async function AdminProductsPage() {
         </Table>
       </div>
     </div>
-  )
+  );
 }

@@ -1,99 +1,182 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function AuthForm() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [fullName, setFullName] = useState('')
-  const [isLogin, setIsLogin] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const supabase = createClient()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
+
+  const [otp, setOtp] = useState("");
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        email: email.trim(),
+        token: otp.trim(),
+        type: 'email'
+      });
+      if (error) throw error;
+      toast.success("Account verified successfully! You are now signed in.");
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) throw error
-        toast.success("Signed in")
-        router.refresh()
-      } else {
-        const { error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
-          options: { data: { full_name: fullName } }
-        })
-        if (error) throw error
-        toast.success("Account created successfully. Please Sign In below.")
-        setIsLogin(true) // Switch to Sign In form
+        });
+        if (error) throw error;
+        toast.success("Signed in");
+        router.refresh();
+      } else {
+        const { data: signUpCheck, error: signUpError } =
+          await supabase.auth.signUp({
+            email,
+            password,
+            options: { data: { full_name: fullName } },
+          });
+        if (signUpError) throw signUpError;
+
+        if (
+          signUpCheck.user &&
+          signUpCheck.user.identities &&
+          signUpCheck.user.identities.length === 0
+        ) {
+          throw new Error(
+            "This email is already registered. Please sign in instead.",
+          );
+        }
+
+        toast.success("Verification code sent to your Gmail.");
+        setIsVerifyingOtp(true); // Switch to OTP verification form
       }
     } catch (error: any) {
-      toast.error(error.message)
+      toast.error(error.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
+  };
+
+  if (isVerifyingOtp) {
+    return (
+      <form onSubmit={handleVerifyOtp} className="space-y-5">
+        <div>
+          <label className="text-xs text-muted-foreground block mb-1.5 text-center">
+            Enter the verification code sent to<br/> <strong className="text-foreground">{email}</strong>
+          </label>
+          <input
+            required
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            className="w-full bg-card border border-border px-4 py-3 text-center tracking-widest text-lg text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+            placeholder="Enter Code"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/95 transition-colors duration-200 disabled:opacity-50"
+        >
+          {isLoading ? "Verifying..." : "Verify & Sign In"}
+        </button>
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {!isLogin && (
         <div>
-          <label className="text-xs text-zinc-500 block mb-1.5">Full Name</label>
+          <label className="text-xs text-muted-foreground block mb-1.5">
+            Full Name
+          </label>
           <input
             required
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full bg-transparent border border-white/[0.06] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors"
+            className="w-full bg-card border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+            placeholder="Muhammad Saad Zia"
           />
         </div>
       )}
 
       <div>
-        <label className="text-xs text-zinc-500 block mb-1.5">Email</label>
+        <label className="text-xs text-muted-foreground block mb-1.5">
+          Email Address
+        </label>
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-transparent border border-white/[0.06] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors"
+          className="w-full bg-card border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+          placeholder="you@example.com"
         />
       </div>
 
       <div>
-        <label className="text-xs text-zinc-500 block mb-1.5">Password</label>
+        <label className="text-xs text-muted-foreground block mb-1.5">
+          Password
+        </label>
         <input
           type="password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full bg-transparent border border-white/[0.06] px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors"
+          className="w-full bg-card border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+          placeholder="••••••••"
         />
       </div>
 
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-white text-black py-3 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 disabled:opacity-50"
+        className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/95 transition-colors duration-200 disabled:opacity-50"
       >
-        {isLoading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
+        {isLoading ? "Processing..." : isLogin ? "Sign In" : "Send Verification Code"}
       </button>
 
       <div className="text-center">
         <button
           type="button"
           onClick={() => setIsLogin(!isLogin)}
-          className="text-xs text-zinc-500 hover:text-white transition-colors duration-200"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
         >
-          {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+          {isLogin
+            ? "Don't have an account? Sign up"
+            : "Already have an account? Sign in"}
         </button>
       </div>
     </form>
-  )
+  );
 }
