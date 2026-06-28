@@ -70,6 +70,8 @@ export default function EditProductButton({
                   name="name"
                   defaultValue={product.name}
                   required
+                  minLength={3}
+                  maxLength={100}
                   className="w-full bg-background border border-border px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   placeholder="e.g. Magnesium Glycinate 400mg"
                 />
@@ -83,6 +85,10 @@ export default function EditProductButton({
                   name="slug"
                   defaultValue={product.slug}
                   required
+                  minLength={3}
+                  maxLength={100}
+                  pattern="^[a-z0-9-]+$"
+                  title="Slug can only contain lowercase letters, numbers, and hyphens"
                   className="w-full bg-background border border-border px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   placeholder="e.g. magnesium-glycinate-400mg"
                 />

@@ -10,6 +10,7 @@ import {
   Settings,
   ArrowLeft,
   FileText,
+  Trash2,
 } from "lucide-react";
 
 const navItems = [
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
   { href: "/admin/products", icon: Package, label: "Products" },
   { href: "/admin/categories", icon: Tags, label: "Categories" },
+  { href: "/admin/drafts", icon: Trash2, label: "Drafts (Bin)" },
   { href: "/admin/pages", icon: FileText, label: "Pages" },
   { href: "/admin/settings", icon: Settings, label: "Settings" },
 ];

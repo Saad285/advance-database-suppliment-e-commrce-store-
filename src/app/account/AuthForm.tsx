@@ -122,6 +122,10 @@ export default function AuthForm() {
           </label>
           <input
             required
+            minLength={3}
+            maxLength={50}
+            pattern="^[a-zA-Z\s.-]+$"
+            title="Name can only contain letters, spaces, periods, and hyphens"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             className="w-full bg-card border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
@@ -151,6 +155,9 @@ export default function AuthForm() {
         <input
           type="password"
           required
+          minLength={6}
+          maxLength={50}
+          title="Password must be at least 6 characters long"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full bg-card border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"

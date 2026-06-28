@@ -11,9 +11,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "IronRoots — Premium Supplements",
+  title: "Shahan Traders — Pharmaceutical Distributors",
   description:
-    "Clinically-dosed, third-party tested supplements for health, performance, and longevity.",
+    "Premium pharmaceutical distribution with certified quality, serving healthcare professionals and institutions nationwide.",
 };
 
 export default function RootLayout({

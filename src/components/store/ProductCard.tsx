@@ -45,7 +45,7 @@ export default function ProductCard({
       }}
     >
       <Link href={`/products/${product.slug}`} className="group block">
-        <div className="relative aspect-[3/4] bg-card border border-border overflow-hidden rounded-sm">
+        <div className="relative aspect-[3/4] bg-muted border border-border overflow-hidden rounded-sm group-hover:border-primary/30 transition-colors duration-300">
           {product.images?.[0] ? (
             <Image
               src={product.images[0]}
@@ -89,21 +89,21 @@ export default function ProductCard({
         </div>
 
         <div className="mt-3">
-          <h3 className="text-sm font-normal text-foreground truncate group-hover:text-primary transition-colors duration-200">
+          <h3 className="text-sm font-normal text-foreground/90 truncate group-hover:text-primary transition-colors duration-200">
             {product.name}
           </h3>
           {categoryName && (
-            <p className="text-[11px] text-muted-foreground/80 uppercase tracking-wider mt-1">
+            <p className="text-[11px] text-muted-foreground uppercase tracking-wider mt-1">
               {categoryName}
             </p>
           )}
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-sm font-medium text-foreground">
+            <span className="text-sm font-medium text-foreground/80">
               Rs. {product.price.toLocaleString()}
             </span>
             {product.compare_at_price &&
               product.compare_at_price > product.price && (
-                <span className="text-xs text-muted-foreground/60 line-through">
+                <span className="text-xs text-muted-foreground/70 line-through">
                   Rs. {product.compare_at_price.toLocaleString()}
                 </span>
               )}

@@ -133,13 +133,13 @@ export default function SciFiBackground() {
   if (!mounted) return null;
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-auto z-0" style={{ background: '#0a0a0a' }}>
+    <div className="absolute inset-0 overflow-hidden pointer-events-auto z-0" style={{ background: '#1B3A6B' }}>
       
-      {/* Emerald Green & Teal Aurora Glow — Solid */}
+      {/* Blue Aurora Glow */}
       <div className="absolute inset-x-0 bottom-0 h-[70%] mix-blend-screen pointer-events-none z-[1]">
-        <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[100%] rounded-t-full blur-[100px] animate-blob" style={{ backgroundColor: 'rgba(16, 185, 129, 0.6)' }} />
-        <div className="absolute bottom-[-10%] left-[25%] w-[55%] h-[90%] rounded-t-full blur-[110px] animate-blob animation-delay-2000" style={{ backgroundColor: 'rgba(20, 184, 166, 0.5)' }} />
-        <div className="absolute bottom-[-20%] right-[-5%] w-[65%] h-[100%] rounded-t-full blur-[90px] animate-blob animation-delay-4000" style={{ backgroundColor: 'rgba(52, 211, 153, 0.5)' }} />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[100%] rounded-t-full blur-[100px] animate-blob" style={{ backgroundColor: 'rgba(37, 99, 235, 0.55)' }} />
+        <div className="absolute bottom-[-10%] left-[25%] w-[55%] h-[90%] rounded-t-full blur-[110px] animate-blob animation-delay-2000" style={{ backgroundColor: 'rgba(96, 165, 250, 0.40)' }} />
+        <div className="absolute bottom-[-20%] right-[-5%] w-[65%] h-[100%] rounded-t-full blur-[90px] animate-blob animation-delay-4000" style={{ backgroundColor: 'rgba(59, 130, 246, 0.45)' }} />
       </div>
 
       {/* Canvas for Constellation Effect — on top */}

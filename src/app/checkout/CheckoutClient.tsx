@@ -117,6 +117,10 @@ export default function CheckoutClient({
                 </label>
                 <input
                   required
+                  minLength={3}
+                  maxLength={50}
+                  pattern="^[a-zA-Z\s.-]+$"
+                  title="Name can only contain letters, spaces, periods, and hyphens"
                   value={form.deliveryName}
                   onChange={(e) => update("deliveryName", e.target.value)}
                   className="w-full bg-card border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
@@ -131,6 +135,8 @@ export default function CheckoutClient({
                   required
                   type="tel"
                   pattern="[0-9]{11}"
+                  minLength={11}
+                  maxLength={11}
                   title="Phone number must be exactly 11 digits"
                   value={form.deliveryPhone}
                   onChange={(e) => {
@@ -148,18 +154,13 @@ export default function CheckoutClient({
                 </label>
                 <input
                   required
-                  pattern="^[a-zA-Z0-9\s,.-]+$"
-                  title="Address can only contain letters, numbers, spaces, commas, and periods"
+                  minLength={10}
+                  maxLength={200}
+                  title="Please enter a complete address"
                   value={form.deliveryAddress}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    // Only allow letters, numbers, spaces, commas, periods, and hyphens
-                    if (/^[a-zA-Z0-9\s,.-]*$/.test(val)) {
-                      update("deliveryAddress", val);
-                    }
-                  }}
+                  onChange={(e) => update("deliveryAddress", e.target.value)}
                   className="w-full bg-card border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
-                  placeholder="House 123, Street 4, Phase 5"
+                  placeholder="House # 123, Street 4, Sector G-11/3"
                 />
               </div>
 
