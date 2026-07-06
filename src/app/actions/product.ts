@@ -23,20 +23,38 @@ async function saveUploadedFile(file: File): Promise<string | null> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  // Ensure upload directory exists
-  try {
-    await fs.access(uploadDir);
-  } catch {
-    await fs.mkdir(uploadDir, { recursive: true });
-  }
-
   const ext = path.extname(file.name) || ".jpg";
   const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}${ext}`;
-  const filePath = path.join(uploadDir, fileName);
 
-  await fs.writeFile(filePath, buffer);
-  return `/uploads/${fileName}`;
+  const supabase = await createServerSupabase();
+
+  // Upload to Supabase Storage Bucket 'product-images'
+  const { data, error } = await supabase.storage
+    .from("product-images")
+    .upload(fileName, buffer, {
+      contentType: file.type,
+      upsert: false,
+    });
+
+  if (error) {
+    console.error("Supabase storage upload failed, falling back to local:", error);
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    try {
+      await fs.access(uploadDir);
+    } catch {
+      await fs.mkdir(uploadDir, { recursive: true });
+    }
+    const filePath = path.join(uploadDir, fileName);
+    await fs.writeFile(filePath, buffer);
+    return `/uploads/${fileName}`;
+  }
+
+  // Get public URL from Supabase storage
+  const { data: urlData } = supabase.storage
+    .from("product-images")
+    .getPublicUrl(fileName);
+
+  return urlData.publicUrl;
 }
 
 export async function addProduct(formData: FormData) {
@@ -83,6 +101,15 @@ export async function addProduct(formData: FormData) {
     const uploadedUrl = await saveUploadedFile(image_file);
     if (uploadedUrl) {
       final_image = uploadedUrl;
+    }
+  } else if (image_url) {
+    if (!image_url.startsWith("http://") && !image_url.startsWith("https://")) {
+      throw new Error("Image URL must start with http:// or https://");
+    }
+    if (image_url.includes("...")) {
+      throw new Error(
+        "Please provide a complete, working image URL (not a placeholder with '...').",
+      );
     }
   }
 
@@ -163,6 +190,15 @@ export async function updateProduct(productId: string, formData: FormData) {
     const uploadedUrl = await saveUploadedFile(image_file);
     if (uploadedUrl) {
       final_image = uploadedUrl;
+    }
+  } else if (image_url) {
+    if (!image_url.startsWith("http://") && !image_url.startsWith("https://")) {
+      throw new Error("Image URL must start with http:// or https://");
+    }
+    if (image_url.includes("...")) {
+      throw new Error(
+        "Please provide a complete, working image URL (not a placeholder with '...').",
+      );
     }
   }
 
