@@ -12,6 +12,7 @@ export default function AuthForm() {
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
@@ -43,7 +44,14 @@ export default function AuthForm() {
     setIsLoading(true);
 
     try {
-      if (isLogin) {
+      if (isForgotPassword) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/account/reset-password`,
+        });
+        if (error) throw error;
+        toast.success("Password reset link sent to your email!");
+        setIsForgotPassword(false);
+      } else if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -115,6 +123,42 @@ export default function AuthForm() {
     );
   }
 
+  if (isForgotPassword) {
+    return (
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="text-xs text-muted-foreground block mb-1.5 text-center">
+            Enter your email to receive a password reset link
+          </label>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full bg-card border border-border px-4 py-3 text-center text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+            placeholder="you@example.com"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/95 transition-colors duration-200 disabled:opacity-50"
+        >
+          {isLoading ? "Sending..." : "Send Reset Link"}
+        </button>
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => setIsForgotPassword(false)}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+          >
+            Back to Sign In
+          </button>
+        </div>
+      </form>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {!isLogin && (
@@ -151,9 +195,20 @@ export default function AuthForm() {
       </div>
 
       <div>
-        <label className="text-xs text-muted-foreground block mb-1.5">
-          Password
-        </label>
+        <div className="flex justify-between items-center mb-1.5">
+          <label className="text-xs text-muted-foreground block">
+            Password
+          </label>
+          {isLogin && (
+            <button
+              type="button"
+              onClick={() => setIsForgotPassword(true)}
+              className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Forgot Password?
+            </button>
+          )}
+        </div>
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
